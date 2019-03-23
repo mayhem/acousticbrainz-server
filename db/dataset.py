@@ -41,7 +41,7 @@ def create_from_dict(dictionary, author_id):
                           VALUES (uuid_generate_v4(), %s, %s, %s, %s) RETURNING id""",
                                     (dictionary["name"], dictionary["description"], dictionary["public"], author_id))
         dataset_id = result.fetchone()[0]
-
+        
         for cls in dictionary["classes"]:
             if "description" not in cls:
                 cls["description"] = None
