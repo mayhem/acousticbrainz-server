@@ -321,11 +321,6 @@ def _parse_dataset_csv(file):
     classes_dict = defaultdict(lambda: {})
     dataset_description = None
     for class_row in csv.reader(file):
-    # with open(file) as csv_file:
-    #     read_file = csv.reader(csv_file)
-    #     for class_row in read_file:
-        print(class_row)
-        print(len(class_row))
         if len(class_row) != 2:
             raise BadRequest("Bad dataset! Each row must contain one <MBID, class name> pair.")
         if class_row[0] == "description":
@@ -347,11 +342,11 @@ def _parse_dataset_csv(file):
 
     for name, class_data in six.iteritems(classes_dict):
         classes.append({
+            "recordings": class_data["recordings"] if "recordings" in class_data else [],
             "name": name,
             "description": class_data["description"] if "description" in class_data else None,
-            "recordings": class_data["recordings"] if "recordings" in class_data else [],
         })
-    
+
     return [dataset_description, classes]
 
 
