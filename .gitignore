@@ -28,6 +28,10 @@ hl_extractor/streaming_extractor_music_svm
 hl_extractor/svm_models
 hl_extractor/profile.conf
 hl_extractor/profile.conf.in
+config.py
+
+# package-json
+package-lock.json
 
 # Node.js
 /node_modules
