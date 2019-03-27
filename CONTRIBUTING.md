@@ -67,7 +67,9 @@ Bugs and issues are tracked via a ticketing system: https://tickets.metabrainz.o
 
 #### The basic workflow:
 
- * You can assign yourself to a ticket if you wish to start working on it. Set it's status to "in progress" when you begin.
+ * You can assign yourself to a ticket if you wish to start working on it. 
+ * Set the ticket status to "in progress" when you begin.
+ * Follow the above section "Git workflow" to create a pull request for your changes.
  * The project maintainer will change a ticket status to "resolved" when the related pull request is merged.
 
 
