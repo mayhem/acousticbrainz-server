@@ -59,3 +59,15 @@ Ensure that you [write good commit messages](http://robots.thoughtbot.com/5-usef
 
 Once you have made your changes, create [a new pull request](https://github.com/metabrainz/acousticbrainz-server/compare).
 
+We automatically run CI tests on pull requests, once you are added to a whitelist - this protects our CI from being overloaded by malicious pull reqeusts.
+
+## Bug tracking and issues
+
+Bugs and issues are tracked via a ticketing system: https://tickets.metabrainz.org/projects/AB/issues/
+
+#### The basic workflow:
+
+ * You can assign yourself to a ticket if you wish to start working on it. Set it's status to "in progress" when you begin.
+ * The project maintainer will change a ticket status to "resolved" when the related pull request is merged.
+
+
