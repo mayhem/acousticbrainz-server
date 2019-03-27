@@ -59,6 +59,4 @@ Ensure that you [write good commit messages](http://robots.thoughtbot.com/5-usef
 
 Once you have made your changes, create [a new pull request](https://github.com/metabrainz/acousticbrainz-server/compare).
 
-We automatically run CI tests on pull requests, once you are added to a whitelist - this protects our CI from being overloaded by malicious pull reqeusts.
-
 
