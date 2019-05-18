@@ -149,8 +149,7 @@ class DataDBTestCase(DatabaseTestCase):
         recordings = [('4ee71816-e0be-4257-a5f9-98dca3ec8bcd', 0),
                       ('48877286-42d4-4b0a-a1e0-d703a587f64b', 1),
                       ('ffcc4249-28bb-4c91-9195-a60b21d4fb94', 0)]
-        with self.assertRaises(db.exceptions.NoDataFoundException):
-            db.data.load_many_low_level(list(recordings))
+        self.assertEqual({}, db.data.load_many_low_level(list(recordings)))
 
         one = {"data": "one", "metadata": {"audio_properties": {"lossless": True}, "version": {"essentia_build_sha": "x"}}}
         two = {"data": "two", "metadata": {"audio_properties": {"lossless": True}, "version": {"essentia_build_sha": "x"}}}
@@ -436,6 +435,12 @@ class DataDBTestCase(DatabaseTestCase):
 
 
     def test_load_many_high_level_offset(self):
+        # If no hl data is found, empty dictionary is returned
+        recordings = [(self.test_mbid, 0),
+                      (self.test_mbid_two, 0)]
+                      
+        self.assertEqual({}, db.data.load_many_high_level(list(recordings)))
+        
         # If an offset doesn't exist or recording doesn't exist, it is skipped.
         db.data.write_low_level(self.test_mbid, self.test_lowlevel_data, gid_types.GID_TYPE_MBID)
         db.data.write_low_level(self.test_mbid_two, self.test_lowlevel_data_two, gid_types.GID_TYPE_MBID)
@@ -478,14 +483,6 @@ class DataDBTestCase(DatabaseTestCase):
             self.test_mbid_two: {'0': hl2_expected}
         }        
         self.assertEqual(expected, db.data.load_many_high_level(list(recordings)))
-
-
-    def test_load_many_high_level_none(self):
-        # If no hl data is found, no data found exception should be raised
-        recordings = [(self.test_mbid, 0),
-                      (self.test_mbid_two, 0)]
-        with self.assertRaises(db.exceptions.NoDataFoundException):
-            db.data.load_many_high_level(list(recordings))
 
 
     def test_count_lowlevel(self):
