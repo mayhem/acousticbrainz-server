@@ -176,6 +176,32 @@ def check_bad_request_for_multiple_recordings():
     return recordings
 
 
+def parse_select_features():
+    """Check whether the features are found or not.
+    Parse the query string of features to create a list of features,
+    excluding those that are not offered.
+
+    If features are missing, an APIBadRequest Exception is
+    raised stating the missing features message.
+
+    Returns a list of features ['feature1',...,'featureN']
+    """
+    features = request.args.get("features")
+
+    if not features:
+        raise webserver.views.api.exceptions.APIBadRequest("Missing `features` parameter")
+    
+    ret = []
+    for feature in features.split(';'):
+        # If feature is not in the list of selectable features, skip it
+        if feature in selectable_features:
+            ret.append(feature)
+
+    # Remove duplicates, preserving order
+    seen = set()
+    return [x for x in ret if not (x in seen or seen.add(x))]
+
+
 def get_data_for_multiple_recordings(collect_data):
     """Gets low-level and high-level data using the function collect_data
     """
@@ -256,6 +282,38 @@ def get_many_highlevel():
     """
     recording_details = get_data_for_multiple_recordings(db.data.load_high_level)
     return recording_details
+
+
+@bp_core.route("/low-level/select-features", methods=["GET"])
+@crossdomain()
+def get_many_select_features():
+    """Get a specified subset of low-level data for many recordings at once.
+
+    **Example response**:
+
+    .. sourcecode:: json
+
+       {"mbid1": {"offset1": {document},
+                  "offset2": {document}},
+        "mbid2": {"offset1": {document}}
+       }
+
+    :query recording_ids: *Required.* A list of recording MBIDs to retrieve.
+
+        Takes the form `mbid[:offset];mbid[:offset]`. Offsets are optional, and should
+        be >= 0
+
+    :query features: *Required.* A list of features to be returned for each mbid.
+
+        Takes the form `feature1;feature2`.
+    
+    :resheader Content-Type: *application/json*
+    """
+    features = check_bad_request_for_features
+    recordings = check_bad_request_for_multiple_recordings()
+    recording_details = db.data.load_many_select_features(recordings, features)
+
+    return jsonify(recording_details)
 
 
 @bp_core.route("/count", methods=["GET"])
