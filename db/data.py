@@ -414,6 +414,35 @@ def load_high_level(mbid, offset=0):
         return {"metadata": metadata, "highlevel": highlevel}
 
 
+def load_many_select_features(recordings, features):
+    """Load select features for multiple recordings.
+    
+    Args:
+        recordings: A list of tuples (mbid, offset).
+        features: A list of features ['feature1',..., 'featureN']
+    """
+    with db.engine.connect() as connection:
+        query_one = text("""
+            SELECT
+        """)
+
+        query_two = text("""
+            # all of the features go here, i.e. construct what must be selected from jsonb data
+        """)
+
+        query_three = text("""
+            FROM (SELECT data FROM lowlevel_json LIMIT 1) AS data;
+        """)
+
+        query = query_one + query_two + query_three
+
+        # Execute query
+
+        # Process results
+
+        return recordings
+
+
 def count_lowlevel(mbid):
     """Count number of stored low-level submissions for a specified MBID."""
     with db.engine.connect() as connection:

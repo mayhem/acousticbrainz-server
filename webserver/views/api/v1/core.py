@@ -192,8 +192,24 @@ def parse_select_features():
         raise webserver.views.api.exceptions.APIBadRequest("Missing `features` parameter")
     
     ret = []
+    selectable_features = ['lowlevel.average_loudness', 
+        'lowlevel.dynamic_complexity', 
+        'metadata.audio_properties.replay_gain', 
+        'rhythm.beats_count', 
+        'rhythm.beats_loudness.mean', 
+        'rhythm.bpm', 
+        'rhythm.bpm_histogram_first_peak_bpm.mean', 
+        'rhythm.bpm_histogram_second_peak_bpm.mean', 
+        'bpm.danceability', 
+        'bpm.onset_rate', 
+        'tonal.chords_key', 
+        'tonal.chords_scale', 
+        'tonal.key_key', 
+        'tonal.key_scale', 
+        'tonal.tuning_frequency', 
+        'tonal.tuning_equal_tempered_deviation']
+
     for feature in features.split(';'):
-        # If feature is not in the list of selectable features, skip it
         if feature in selectable_features:
             ret.append(feature)
 
@@ -309,7 +325,7 @@ def get_many_select_features():
     
     :resheader Content-Type: *application/json*
     """
-    features = check_bad_request_for_features
+    features = parse_select_features()
     recordings = check_bad_request_for_multiple_recordings()
     recording_details = db.data.load_many_select_features(recordings, features)
 
