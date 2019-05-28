@@ -42,8 +42,6 @@ def _update_similarity(connection, name, row_id, vector, isnan=False):
 @click.option("--to-process", "-t", type=int, help="Only process limited number of rows")
 @click.option("--batch-size", "-b", type=int, help="Override processing batch size")
 def add(name, force=False, to_process=None, batch_size=None):
-    print("BASE METRICS:")
-    print(metrics.BASE_METRICS)
     try:
         metric_cls = metrics.BASE_METRICS[name]
     except KeyError:
