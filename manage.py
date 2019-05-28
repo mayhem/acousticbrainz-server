@@ -18,6 +18,7 @@ import db.exceptions
 import db.stats
 import db.user
 import webserver
+import similarity.script
 
 import add_submission_offsets
 
@@ -244,6 +245,7 @@ def toggle_site_status():
 # Please keep additional sets of commands down there
 cli.add_command(db.dump_manage.cli, name="dump")
 cli.add_command(add_submission_offsets.cli, name="update-offsets")
+cli.add_command(similarity.script.cli, name="similarity")
 
 if __name__ == '__main__':
     cli()
