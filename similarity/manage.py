@@ -5,7 +5,10 @@ import click
 import webserver
 import metrics
 from operations import HybridMetric
+from index_model import AnnoyModel
 import db
+
+from sqlalchemy import text
 
 
 PROCESS_BATCH_SIZE = 10000
@@ -126,3 +129,59 @@ def delete_hybrid(name):
     with db.engine.begin() as connection:
         metric = HybridMetric(connection, name)
         metric.delete()
+
+
+@cli.command(name='add-index')
+@click.argument("metric")
+@click.option("batch_size", "-b", type=int, help="Size of batches")
+def add_index(metric, batch_size=None):
+    """ Creates an index, adds all items to the index """
+    with db.engine.connect() as connection:
+        click.echo("Initializing index...")
+        index = AnnoyModel(connection, metric)
+
+        batch_size = batch_size or PROCESS_BATCH_SIZE
+        offset = 0
+        count = 0
+
+        result = connection.execute("""
+            SELECT MAX(id)
+              FROM similarity
+        """)
+        total = result.fetchone()[0]
+
+        # Query for a batch of ids and metrics, pass them as tuples into add_recordings
+        batch_query = text("""
+            SELECT *
+            FROM similarity
+            ORDER BY id
+            LIMIT :batch_size
+            OFFSET :offset
+        """)
+
+        click.echo("Inserting items...")
+        while True:
+            batch_result = connection.execute(batch_query, { "batch_size": batch_size, "offset": offset })
+            if not batch_result.row_count:
+                click.echo("Finished adding items. Exiting...")
+                break
+
+            items = []
+            for row in batch_result.fetchall():
+                items.append((row["id"], row[index.metric_name]))        
+
+            for id, vector in items:
+                while not id == count:
+                    # Rows are empty, add vector of zeros
+                    placeholder = [0] * index.dimension
+                    index.add_recording(count, placeholder)
+                    count += 1
+                index.add_recording(id, vector)
+                count += 1
+            
+            offset += count
+            click.echo("Items added: {}/{} ({:.3f}%)".format(offset, total, float(offset) / total * 100))
+        
+        click.echo("Items added. Building index...")
+        index.build()
+        index.save()
