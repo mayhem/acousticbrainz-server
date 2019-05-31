@@ -21,9 +21,10 @@ mbids=[
 ]
 
 
-@cli.command(name='probe-endpoints')
-def probe_endpoints():
-    print("Probing endpoints...")
+@cli.command(name='probe-postgres')
+def probe_postgres():
+    """Get similar recordings using the postgres cube index solution."""
+    print("Probing endpoint for postgres...")
     metrics_dict = get_all_metrics()
     print("====================")
     for mbid in mbids:

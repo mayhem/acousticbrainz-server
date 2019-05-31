@@ -57,15 +57,3 @@ def get_similar_recordings(mbid, metric, limit=QUERY_RESULT_SIZE):
         rows = result.fetchall()
         rows = zip(*rows)
         return list(np.unique(rows)[:limit]), category, description
-
-
-def add_evaluation(user_id, query_mbid, result_mbids, metric, rating, suggestion='NULL'):
-    result_mbids_str = 'NULL' if result_mbids is None else 'ARRAY' + str(result_mbids)
-    user_id = user_id or 'NULL'
-
-    with db.engine.begin() as connection:
-        connection.execute("""
-            INSERT INTO similarity_eval (user_id, query_mbid, result_mbids, metric, rating, suggestion) 
-            VALUES (%(user)s, '%(query_mbid)s', %(result_mbids)s, '%(metric)s', %(rating)s, %(suggestion)s)
-        """ % {'user': user_id, 'query_mbid': query_mbid, 'result_mbids': result_mbids_str, 'metric': metric,
-               'rating': rating, 'suggestion': suggestion})

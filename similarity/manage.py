@@ -36,12 +36,12 @@ def _update_similarity(connection, name, row_id, vector, isnan=False):
                        {'metric': name, 'value': 'ARRAY' + value, 'id': row_id})
 
 
-@cli.command()
+@cli.command(name='add-metric')
 @click.argument("name")
 @click.option("--force", "-f", is_flag=True, help="Recompute existing metrics.")
 @click.option("--to-process", "-t", type=int, help="Only process limited number of rows")
 @click.option("--batch-size", "-b", type=int, help="Override processing batch size")
-def add(name, force=False, to_process=None, batch_size=None):
+def add_metric(name, force=False, to_process=None, batch_size=None):
     try:
         metric_cls = metrics.BASE_METRICS[name]
     except KeyError:
@@ -87,11 +87,11 @@ def add(name, force=False, to_process=None, batch_size=None):
     return current
 
 
-@cli.command()
+@cli.command(name='delete-metric')
 @click.argument("name")
 @click.option("--soft", "-s", is_flag=True, help="Don't delete data")
 @click.option("--leave-stats", "-l", is_flag=True, help="Don't delete computed statistics")
-def delete(name, soft=False, leave_stats=False):
+def delete_metric(name, soft=False, leave_stats=False):
     try:
         metric_cls = metrics.BASE_METRICS[name]
     except KeyError:
@@ -109,20 +109,20 @@ def delete(name, soft=False, leave_stats=False):
                 pass
 
 
-# @cli.command()
-# @click.argument("name")
-# @click.argument("category")
-# @click.option("--description", "-d", type=str, help="Description of metric")
-# def add_hybrid(name, category, description=None):
-#     description = description or name
-#     with db.engine.begin() as connection:
-#         metric = HybridMetric(connection, name, category, description)
-#         metric.create()
+@cli.command()
+@click.argument("name")
+@click.argument("category")
+@click.option("--description", "-d", type=str, help="Description of metric")
+def add_hybrid(name, category, description=None):
+    description = description or name
+    with db.engine.begin() as connection:
+        metric = HybridMetric(connection, name, category, description)
+        metric.create()
 
 
-# @cli.command()
-# @click.argument("name")
-# def delete_hybrid(name):
-#     with db.engine.begin() as connection:
-#         metric = HybridMetric(connection, name)
-#         metric.delete()
+@cli.command()
+@click.argument("name")
+def delete_hybrid(name):
+    with db.engine.begin() as connection:
+        metric = HybridMetric(connection, name)
+        metric.delete()
