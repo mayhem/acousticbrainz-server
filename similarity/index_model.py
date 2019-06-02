@@ -76,5 +76,7 @@ class AnnoyModel(object):
 
 
     def add_recording(self, id, vector):
-        if not self.index.get_item_vector(id):
-            self.index.add_item(id, vector)
+        self.index.add_item(id, vector)
+
+    def get_nns(self, id, num_neighbours):
+        return self.index.get_nns_by_item(id, num_neighbours)

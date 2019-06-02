@@ -4,8 +4,10 @@ import timeit
 import click
 
 import webserver
+import db
 
 from api import get_all_metrics, get_similar_recordings
+from index_model import AnnoyModel
 
 PROCESS_BATCH_SIZE = 10000
 
@@ -23,7 +25,7 @@ mbids=[
 
 @cli.command(name='probe-postgres')
 def probe_postgres():
-    """Get similar recordings using the postgres cube index solution."""
+    """Get similar recordings using the postgres cube index."""
     print("Probing endpoint for postgres...")
     metrics_dict = get_all_metrics()
     print("====================")
@@ -38,3 +40,14 @@ def probe_postgres():
                 print("Similar recordings:")
                 print(recordings)
                 print("===================")
+
+
+@cli.command(name='probe-annoy')
+def probe_annoy():
+    """Get similar recordings using the annoy index."""
+    with db.engine.connect() as connection:
+        index = AnnoyModel(connection, "mfccs", load_existing=True)
+        recordings = index.get_nns(1, 1000)
+        print("Similar recordings:")
+        print(recordings)
+        print("========================")

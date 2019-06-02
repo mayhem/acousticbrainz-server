@@ -11,7 +11,7 @@ import db
 from sqlalchemy import text
 
 
-PROCESS_BATCH_SIZE = 10000
+PROCESS_BATCH_SIZE = 50000
 
 cli = FlaskGroup(add_default_commands=False, create_app=webserver.create_app_flaskgroup)
 
@@ -135,7 +135,7 @@ def delete_hybrid(name):
 @click.argument("metric")
 @click.option("batch_size", "-b", type=int, help="Size of batches")
 def add_index(metric, batch_size=None):
-    """ Creates an index, adds all items to the index """
+    """Creates an annoy index for the specified metric, adds all items to the index."""
     with db.engine.connect() as connection:
         click.echo("Initializing index...")
         index = AnnoyModel(connection, metric)
@@ -150,20 +150,20 @@ def add_index(metric, batch_size=None):
         """)
         total = result.fetchone()[0]
 
-        # Query for a batch of ids and metrics, pass them as tuples into add_recordings
         batch_query = text("""
             SELECT *
-            FROM similarity
-            ORDER BY id
-            LIMIT :batch_size
+              FROM similarity
+             ORDER BY id
+             LIMIT :batch_size
             OFFSET :offset
         """)
 
         click.echo("Inserting items...")
         while True:
+            # Get ids and vectors for specific metric in batches
             batch_result = connection.execute(batch_query, { "batch_size": batch_size, "offset": offset })
-            if not batch_result.row_count:
-                click.echo("Finished adding items. Exiting...")
+            if not batch_result.rowcount:
+                click.echo("Finished adding items. Building index...")
                 break
 
             items = []
@@ -172,16 +172,15 @@ def add_index(metric, batch_size=None):
 
             for id, vector in items:
                 while not id == count:
-                    # Rows are empty, add vector of zeros
+                    # Rows are empty, add zero vector
                     placeholder = [0] * index.dimension
                     index.add_recording(count, placeholder)
                     count += 1
                 index.add_recording(id, vector)
                 count += 1
             
-            offset += count
+            offset += batch_size
             click.echo("Items added: {}/{} ({:.3f}%)".format(offset, total, float(offset) / total * 100))
         
-        click.echo("Items added. Building index...")
         index.build()
         index.save()
