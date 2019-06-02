@@ -1,3 +1,5 @@
+import os
+
 from annoy import AnnoyIndex
 from sqlalchemy import text
 
@@ -19,7 +21,7 @@ class AnnoyModel(object):
         self.dimension = self.get_vector_dimension()
         self.index = AnnoyIndex(self.dimension, metric=self.distance_type)
         if load_existing:
-            self.load(metric_name + '.ann')
+            self.load()
 
 
     def get_vector_dimension(self):
@@ -29,8 +31,8 @@ class AnnoyModel(object):
         """
         result = self.connection.execute("""
             SELECT *
-            FROM similarity
-            LIMIT 1
+              FROM similarity
+             LIMIT 1
         """)
         try:
             dimension = len(result.fetchone()[self.metric_name])
@@ -66,17 +68,29 @@ class AnnoyModel(object):
         self.index.build(self.n_trees)
 
 
-    def save(self):
-        name = self.metric_name + '.ann'
-        self.index.save(name)
+    def save(self, location=os.path.join(os.getcwd(), 'annoy_indices'), name=None):
+        # Save and load the index using the metric name.
+        try: 
+            os.makedirs(location)
+        except OSError:
+            if not os.path.isdir(location):
+                raise
+        name = (name or self.metric_name) + '.ann'
+        file_path = os.path.join(location, name)
+        self.index.save(file_path)
 
 
-    def load(self, name):
-        self.index.load(name)
+    def load(self, name=None):
+        # Load and build an existing annoy index.
+        file_path = os.path.join(os.getcwd(), 'annoy_indices')
+        name = (name or self.metric_name) + '.ann'
+        full_path = os.path.join(file_path, name)
+        self.index.load(full_path)
 
 
     def add_recording(self, id, vector):
         self.index.add_item(id, vector)
+
 
     def get_nns(self, id, num_neighbours):
         return self.index.get_nns_by_item(id, num_neighbours)

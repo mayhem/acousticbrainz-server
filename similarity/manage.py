@@ -183,4 +183,6 @@ def add_index(metric, batch_size=None):
             click.echo("Items added: {}/{} ({:.3f}%)".format(offset, total, float(offset) / total * 100))
         
         index.build()
+        click.echo("Saving index...")
         index.save()
+        click.echo("Done!")
