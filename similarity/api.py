@@ -5,7 +5,7 @@ import numpy as np
 NORMALIZATION_SAMPLE_SIZE = 10000
 PROCESS_BATCH_SIZE = 10000
 QUERY_PADDING_FACTOR = 3
-QUERY_RESULT_SIZE = 10
+QUERY_RESULT_SIZE = 1000
 
 
 def get_all_metrics():
@@ -25,6 +25,33 @@ def get_all_metrics():
         return metrics
 
 
+def get_all_indices(n_trees=10):
+    distance_measures = [
+        "angular",
+        "euclidean",
+        "manhattan",
+        "hamming",
+        "dot"]
+    metrics = ["mfccs",
+        "mfccsw",
+        "gfccs",
+        "gfccsw",
+        "key",
+        "bpm",
+        "onsetrate",
+        "moods",
+        "instruments",
+        "dortmund",
+        "rosamerica",
+        "tzanetakis"]
+    indices = defaultdict(list)
+    for distance in distance_measures:
+        for metric in metrics: 
+            indices[distance].append((metric, n_trees) 
+    return indices
+
+
+
 def get_similar_recordings(mbid, metric, limit=QUERY_RESULT_SIZE):
     with db.engine.begin() as connection:
         # check both existence and if it is hybrid
@@ -41,7 +68,7 @@ def get_similar_recordings(mbid, metric, limit=QUERY_RESULT_SIZE):
         # actual query
         result = connection.execute("""
             SELECT 
-              gid
+              gid, submission_offset
             FROM lowlevel
             JOIN similarity ON lowlevel.id = similarity.id
             WHERE gid != '%(gid)s'
@@ -53,7 +80,9 @@ def get_similar_recordings(mbid, metric, limit=QUERY_RESULT_SIZE):
                 LIMIT 1
               )) 
             LIMIT %(max)s
-        """ % {'metric': metric, 'gid': mbid, 'max': limit * QUERY_PADDING_FACTOR})
-        rows = result.fetchall()
-        rows = zip(*rows)
-        return list(np.unique(rows)[:limit]), category, description
+        """ % {'metric': metric, 'gid': mbid, 'max': limit})
+        recordings = []
+        for row in result.fetchall():
+            recordings.append((row["gid"], row["submission_offset"]))
+
+        return recordings, category, description

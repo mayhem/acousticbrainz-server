@@ -75,7 +75,7 @@ class AnnoyModel(object):
         except OSError:
             if not os.path.isdir(location):
                 raise
-        name = (name or self.metric_name) + '.ann'
+        name = (name or self.metric_name) + '_' + self.distance_type + '_' + str(self.n_trees) + '.ann'
         file_path = os.path.join(location, name)
         self.index.save(file_path)
 
@@ -83,14 +83,70 @@ class AnnoyModel(object):
     def load(self, name=None):
         # Load and build an existing annoy index.
         file_path = os.path.join(os.getcwd(), 'annoy_indices')
-        name = (name or self.metric_name) + '.ann'
+        name = (name or self.metric_name) + '_' + self.distance_type + '_' + str(self.n_trees) + '.ann'
         full_path = os.path.join(file_path, name)
         self.index.load(full_path)
 
-
+    # TODO: refactor to move things out of here and into api. 
+    # Write similarity script in api. 
+    # Write script to test overlap between postgres and annoy results. 
+    # Get nearest neighbours query with mbids as input.
+    # Unit test all of this. 
     def add_recording(self, id, vector):
         self.index.add_item(id, vector)
 
 
-    def get_nns(self, id, num_neighbours):
-        return self.index.get_nns_by_item(id, num_neighbours)
+    def get_nns_by_id(self, id, num_neighbours, return_ids=False):
+        """Get the most similar recordings for a recording with the
+           specified id.
+        
+        Args:
+            id: non-negative integer lowlevel.id for a recording.
+            num_neighbours: positive integer, number of similar recordings
+            to be returned in the query.
+            return_ids: boolean, determines whether (mbid, offset), or lowlevel.id
+            is returned for each similar recording.
+
+        Returns:
+            return_ids = True: A list of lowlevel.ids [id1, ..., idn]
+            return_ids = False: A list of tuples [(mbid1, offset), ..., (mbidn, offset)]
+        """
+        
+        ids = self.index.get_nns_by_item(id, num_neighbours)
+        if return_ids:
+            # Return only ids
+            return ids
+        else:
+            # Get corresponding (mbid, offset) for the most similar ids
+            query = text("""
+                SELECT id
+                     , gid
+                     , submission_offset
+                  FROM lowlevel
+                 WHERE id IN :ids
+            """)
+            result = self.connection.execute(query, { "ids": tuple(ids) })
+
+            recordings = []
+            for row in result.fetchall():
+                recordings.append((row["gid"], row["submission_offset"]))
+            
+            return recordings
+
+    def get_nns_by_mbid(self, mbid, offset, num_neighbours, return_ids=False):
+        # Find corresponding lowlevel.id to (mbid, offset) combinationd
+        query = text("""
+            SELECT id
+              FROM lowlevel
+             WHERE gid = :mbid
+               AND submission_offset = :offset
+        """)
+        result = self.connection.execute(query, { "mbid": mbid, "offset": offset })
+        if not result.rowcount:
+            print("That (mbid, offset) combination does not exist")
+        else:
+            id = result.fetchone()[0]
+            return self.get_nns_by_id(id, num_neighbours, return_ids)
+
+
+            

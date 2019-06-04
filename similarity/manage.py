@@ -131,14 +131,14 @@ def delete_hybrid(name):
         metric.delete()
 
 
-@cli.command(name='add-index')
-@click.argument("metric")
-@click.option("batch_size", "-b", type=int, help="Size of batches")
-def add_index(metric, batch_size=None):
+# @cli.command(name='add-index')
+# @click.argument("metric")
+# @click.option("batch_size", "-b", type=int, help="Size of batches")
+def add_index(metric, batch_size=None, n_trees=10, distance_type='angular'):
     """Creates an annoy index for the specified metric, adds all items to the index."""
     with db.engine.connect() as connection:
         click.echo("Initializing index...")
-        index = AnnoyModel(connection, metric)
+        index = AnnoyModel(connection, metric, n_trees, distance_type)
 
         batch_size = batch_size or PROCESS_BATCH_SIZE
         offset = 0
@@ -166,17 +166,13 @@ def add_index(metric, batch_size=None):
                 click.echo("Finished adding items. Building index...")
                 break
 
-            items = []
             for row in batch_result.fetchall():
-                items.append((row["id"], row[index.metric_name]))        
-
-            for id, vector in items:
-                while not id == count:
+                while not row["id"] == count:
                     # Rows are empty, add zero vector
                     placeholder = [0] * index.dimension
                     index.add_recording(count, placeholder)
                     count += 1
-                index.add_recording(id, vector)
+                index.add_recording(row["id"], row[index.metric_name])
                 count += 1
             
             offset += batch_size
@@ -186,3 +182,25 @@ def add_index(metric, batch_size=None):
         click.echo("Saving index...")
         index.save()
         click.echo("Done!")
+
+
+@cli.command(name='add-indices')
+@click.option("--n-trees", "-n", type=int)
+@click.option("--distance-type", "-d")
+def add_indices(n_trees=10, distance_type='angular'):
+    metrics = ["mfccs",
+    "mfccsw",
+    "gfccs",
+    "gfccsw",
+    "key",
+    "bpm",
+    "onsetrate",
+    "moods",
+    "instruments",
+    "dortmund",
+    "rosamerica",
+    "tzanetakis"]
+    for metric in metrics:
+        click.echo("Adding index: {}".format(metric))
+        add_index(metric, batch_size=None, n_trees=n_trees, distance_type=distance_type)
+    click.echo("Finished.")

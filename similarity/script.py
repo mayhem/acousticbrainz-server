@@ -1,6 +1,7 @@
 from __future__ import print_function
 from flask.cli import FlaskGroup
 import timeit
+import time
 import click
 
 import webserver
@@ -8,6 +9,8 @@ import db
 
 from api import get_all_metrics, get_similar_recordings
 from index_model import AnnoyModel
+from sqlalchemy import text
+from collections import defaultdict
 
 PROCESS_BATCH_SIZE = 10000
 
@@ -29,25 +32,89 @@ def probe_postgres():
     print("Probing endpoint for postgres...")
     metrics_dict = get_all_metrics()
     print("====================")
-    for mbid in mbids:
-        for category, metric_list in metrics_dict.items():
-            for metric, _ in metric_list:
-                # time = timeit.timeit("get_similar_recordings('{}', '{}')".format(mbid, metric),
-                #                      setup='from similarity.api import get_similar_recordings',
-                #                      number=1)
-                recordings, category, description = get_similar_recordings(mbid, metric)
-                print(mbid, metric, category, description)
-                print("Similar recordings:")
-                print(recordings)
-                print("===================")
-
+    # for mbid in mbids:
+    #     for category, metric_list in metrics_dict.items():
+    #         for metric, _ in metric_list:
+    #             # time = timeit.timeit("get_similar_recordings('{}', '{}')".format(mbid, metric),
+    #             #                      setup='from similarity.api import get_similar_recordings',
+    #             #                      number=1)
+    #             recordings, category, description = get_similar_recordings(mbid, metric)
+    #             print(mbid, metric, category, description)
+    #             print("Similar recordings:")
+    #             print(recordings)
+    #             print("===================")
+    recordings, category, description = get_similar_recordings(mbids[0], 'mfccs')
+    print("Similar recordings:")
+    print(recordings)
+    print("===================")
 
 @cli.command(name='probe-annoy')
 def probe_annoy():
     """Get similar recordings using the annoy index."""
     with db.engine.connect() as connection:
         index = AnnoyModel(connection, "mfccs", load_existing=True)
-        recordings = index.get_nns(1, 1000)
-        print("Similar recordings:")
-        print(recordings)
-        print("========================")
+        recordings = index.get_nns_by_mbid(mbids[0], 0, 1000)
+        # print("Similar recordings:")
+        # print(recordings)
+        # print("========================")
+        # query = text("""
+        #     SELECT gid
+        #     FROM lowlevel
+        #     WHERE id
+        #     IN :recordings
+        # """)
+        # result = connection.execute(query, { "recordings": tuple(recordings) })
+        
+        # recordings = []
+        # for row in result.fetchall():
+        #     recordings.append(row["gid"])
+        # print("Similar recordings:")
+        # print(recordings)
+        # print("===================")
+        ret = []
+        for mbid, offset in recordings:
+            ret.append(mbid)
+
+        print(ret)
+        return ret
+
+
+@cli.command(name='probe-all')
+def probe_all():
+    metrics_dict = get_all_metrics()
+    # Compute similarity for postgres
+    click.echo("Pre-computing similarity with Postgres...")
+    postgres_similarity = defaultdict(defaultdict(dict))
+    for category, metric_list in metrics_dict.items():
+        for metric, _ in metric_list:
+            with db.engine.connect() as connection:
+                for mbid in mbids:
+                    # Time Postgres
+                    start = time.time()
+                    postgres_recordings, category, description = get_similar_recordings(mbid, metric)
+                    end = time.time()
+                    postgres_time = end - start
+                    postgres_similarity[metric][mbid]["recordings"] = postgres_recordings
+                    postgres_similarity[metric][mbid]["time"] = postgres_time
+
+    index_dict = get_all_indices()
+    # Compute similarity for annoy
+    for distance_type in index_dict:
+        for metric, n_trees in distance_type:
+            print("---------------------------")
+            print("METRIC: {}".format(metric))
+            with db.engine.connect() as connection:
+                index = AnnoyModel(connection, metric, n_trees=n_trees, distance_type=distance_type, load_existing=True)
+                for mbid in mbids:
+                    # Time Annoy
+                    start = time.time()
+                    annoy_recordings = index.get_nns_by_mbid(mbid, 0, 1000)
+                    end = time.time()
+                    annoy_time = end - start
+
+                    # Find intersection of solutions
+                    postgres_recordings = postgres_similarity[metric][mbid]["recordings"]
+                    postgres_time = postgres_similarity[metric][mbid]["time"]
+                    tmp = set(postgres_recordings)
+                    intersected_recordings = [recording for recording in annoy_recordings if recording in postgres_recordings]
+                    click.echo("{}: Annoy {}, Postgres {}, Number of Intersections {}".format(mbid, annoy_time, postgres_time, len(intersected_recordings)))
