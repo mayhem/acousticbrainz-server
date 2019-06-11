@@ -10,6 +10,7 @@ import webserver.views.api.exceptions
 from db.data import submit_low_level_data, count_lowlevel
 from db.exceptions import NoDataFoundException, BadDataException
 from webserver.decorators import crossdomain
+from utils.remove_duplicates import remove_duplicates
 
 bp_core = Blueprint('api_v1_core', __name__)
 
@@ -180,8 +181,7 @@ def _parse_bulk_params(params):
         ret.append((recording_id, offset))
 
     # Remove duplicates, preserving order
-    seen = set()
-    return [x for x in ret if not (x in seen or seen.add(x))]
+    return remove_duplicates(ret)
 
 
 def check_bad_request_for_multiple_recordings():
@@ -323,8 +323,8 @@ def parse_select_features():
     aliases.append(metadata_audio_properties_alias)
 
     # Remove duplicates, preserving order
-    seen = set()
-    return [x for x in parsed_features if not (x in seen or seen.add(x))], aliases
+    parsed_features = remove_duplicates(parsed_features)
+    return parsed_features, aliases
 
 
 @bp_core.route("/low-level/select", methods=["GET"])
