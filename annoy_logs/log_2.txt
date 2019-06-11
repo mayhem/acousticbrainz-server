@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "manage.py", line 23, in <module>
+    import similarity.script
+  File "/code/similarity/script.py", line 10, in <module>
+    from api import get_all_metrics, get_similar_recordings
+  File "/code/similarity/api.py", line 51
+    return indices
+         ^
+SyntaxError: invalid syntax

@@ -1,0 +1,96 @@
+---------------------------                                                                                          
+METRIC: mfccs                                                                                                        
+ebf79ba5-085e-48d2-9eb8-2d992fbf0f6d: Annoy 0.768285036087, Postgres 25.3925340176, Number of Intersections 227      
+8d5f76cf-0fa1-45a1-8464-68053d03b46b: Annoy 0.863574028015, Postgres 26.8030929565, Number of Intersections 581      
+c718f7c1-b63b-4638-bda3-42ca56177dd7: Annoy 0.893854141235, Postgres 30.4951100349, Number of Intersections 693      
+47974dfd-f37d-4f41-b952-18a86af009d2: Annoy 0.850635051727, Postgres 29.8052668571, Number of Intersections 618      
+0cdc9b5b-b16b-4ff1-9f16-5b4ba76f1c17: Annoy 0.945929050446, Postgres 29.8168652058, Number of Intersections 0        
+b7ffa922-7bb8-4703-aa51-3bcc6d9cc364: Annoy 0.844079971313, Postgres 31.006082058, Number of Intersections 590       
+---------------------------                                                                                          
+METRIC: mfccsw                                                                                                       
+ebf79ba5-085e-48d2-9eb8-2d992fbf0f6d: Annoy 1.3719420433, Postgres 59.0697469711, Number of Intersections 194        
+8d5f76cf-0fa1-45a1-8464-68053d03b46b: Annoy 0.778121948242, Postgres 44.8101379871, Number of Intersections 615      
+c718f7c1-b63b-4638-bda3-42ca56177dd7: Annoy 0.787707090378, Postgres 26.3704969883, Number of Intersections 713      
+47974dfd-f37d-4f41-b952-18a86af009d2: Annoy 0.967707872391, Postgres 23.2988300323, Number of Intersections 639      
+0cdc9b5b-b16b-4ff1-9f16-5b4ba76f1c17: Annoy 0.790385961533, Postgres 29.1596000195, Number of Intersections 0        
+b7ffa922-7bb8-4703-aa51-3bcc6d9cc364: Annoy 0.760601997375, Postgres 23.9233679771, Number of Intersections 618      
+---------------------------                                                                                          
+METRIC: gfccs                                                                                                        
+ebf79ba5-085e-48d2-9eb8-2d992fbf0f6d: Annoy 0.922939062119, Postgres 39.7083199024, Number of Intersections 394      
+8d5f76cf-0fa1-45a1-8464-68053d03b46b: Annoy 0.834438085556, Postgres 25.9662489891, Number of Intersections 802      
+c718f7c1-b63b-4638-bda3-42ca56177dd7: Annoy 0.794196844101, Postgres 12.3566110134, Number of Intersections 742      
+47974dfd-f37d-4f41-b952-18a86af009d2: Annoy 0.750988006592, Postgres 6.52360486984, Number of Intersections 534      
+0cdc9b5b-b16b-4ff1-9f16-5b4ba76f1c17: Annoy 0.396484136581, Postgres 4.14031195641, Number of Intersections 0        
+b7ffa922-7bb8-4703-aa51-3bcc6d9cc364: Annoy 0.41969203949, Postgres 9.4673409462, Number of Intersections 682        
+---------------------------                                                                                          
+METRIC: gfccsw                                                                                                       
+ebf79ba5-085e-48d2-9eb8-2d992fbf0f6d: Annoy 0.743294000626, Postgres 36.1582479477, Number of Intersections 314      
+8d5f76cf-0fa1-45a1-8464-68053d03b46b: Annoy 0.669945955276, Postgres 23.6636478901, Number of Intersections 793      
+c718f7c1-b63b-4638-bda3-42ca56177dd7: Annoy 0.661750078201, Postgres 12.8490281105, Number of Intersections 799      
+47974dfd-f37d-4f41-b952-18a86af009d2: Annoy 0.511356115341, Postgres 5.76860308647, Number of Intersections 590      
+0cdc9b5b-b16b-4ff1-9f16-5b4ba76f1c17: Annoy 0.565001010895, Postgres 3.65567302704, Number of Intersections 0        
+b7ffa922-7bb8-4703-aa51-3bcc6d9cc364: Annoy 0.327073097229, Postgres 7.56935501099, Number of Intersections 679      
+---------------------------                                                                                          
+METRIC: moods                                                                                                        
+ebf79ba5-085e-48d2-9eb8-2d992fbf0f6d: Annoy 0.772984027863, Postgres 2.10731005669, Number of Intersections 11       
+8d5f76cf-0fa1-45a1-8464-68053d03b46b: Annoy 0.365330934525, Postgres 1.74861502647, Number of Intersections 0        
+c718f7c1-b63b-4638-bda3-42ca56177dd7: Annoy 0.217565059662, Postgres 0.899002075195, Number of Intersections 0       
+47974dfd-f37d-4f41-b952-18a86af009d2: Annoy 0.393924951553, Postgres 5.13950586319, Number of Intersections 0        
+0cdc9b5b-b16b-4ff1-9f16-5b4ba76f1c17: Annoy 0.24015712738, Postgres 2.04352593422, Number of Intersections 6         
+b7ffa922-7bb8-4703-aa51-3bcc6d9cc364: Annoy 0.219088077545, Postgres 1.44675707817, Number of Intersections 0        
+---------------------------                                                                                          
+METRIC: instruments                                                                                                  
+ebf79ba5-085e-48d2-9eb8-2d992fbf0f6d: Annoy 0.43884396553, Postgres 0.724833011627, Number of Intersections 0        
+8d5f76cf-0fa1-45a1-8464-68053d03b46b: Annoy 0.181903839111, Postgres 0.767432928085, Number of Intersections 17      
+c718f7c1-b63b-4638-bda3-42ca56177dd7: Annoy 0.146520137787, Postgres 0.650532007217, Number of Intersections 0       
+47974dfd-f37d-4f41-b952-18a86af009d2: Annoy 0.117311000824, Postgres 0.606056213379, Number of Intersections 0       
+0cdc9b5b-b16b-4ff1-9f16-5b4ba76f1c17: Annoy 0.0896987915039, Postgres 0.425747871399, Number of Intersections 0      
+b7ffa922-7bb8-4703-aa51-3bcc6d9cc364: Annoy 0.0962619781494, Postgres 0.719024181366, Number of Intersections 16     
+---------------------------                                                                                          
+METRIC: dortmund                                                                                                     
+ebf79ba5-085e-48d2-9eb8-2d992fbf0f6d: Annoy 0.558726787567, Postgres 7.39192891121, Number of Intersections 0        
+8d5f76cf-0fa1-45a1-8464-68053d03b46b: Annoy 0.13707113266, Postgres 2.59560394287, Number of Intersections 690       
+c718f7c1-b63b-4638-bda3-42ca56177dd7: Annoy 0.135782003403, Postgres 3.17115998268, Number of Intersections 0        
+47974dfd-f37d-4f41-b952-18a86af009d2: Annoy 0.143501996994, Postgres 5.09404087067, Number of Intersections 3        
+0cdc9b5b-b16b-4ff1-9f16-5b4ba76f1c17: Annoy 0.0973999500275, Postgres 2.27185583115, Number of Intersections 0       
+b7ffa922-7bb8-4703-aa51-3bcc6d9cc364: Annoy 0.174820899963, Postgres 0.813558101654, Number of Intersections 0       
+---------------------------                                                                                          
+METRIC: rosamerica                                                                                                   
+ebf79ba5-085e-48d2-9eb8-2d992fbf0f6d: Annoy 0.460547924042, Postgres 1.70413899422, Number of Intersections 0        
+8d5f76cf-0fa1-45a1-8464-68053d03b46b: Annoy 0.169173002243, Postgres 1.23459196091, Number of Intersections 0        
+c718f7c1-b63b-4638-bda3-42ca56177dd7: Annoy 0.142321109772, Postgres 1.14216208458, Number of Intersections 0        
+47974dfd-f37d-4f41-b952-18a86af009d2: Annoy 0.0791990756989, Postgres 0.872168064117, Number of Intersections 0      
+0cdc9b5b-b16b-4ff1-9f16-5b4ba76f1c17: Annoy 0.0902199745178, Postgres 0.875674009323, Number of Intersections 0      
+b7ffa922-7bb8-4703-aa51-3bcc6d9cc364: Annoy 0.0462679862976, Postgres 0.812959909439, Number of Intersections 109    
+---------------------------                                                                                          
+METRIC: tzanetakis                                                                                                   
+ebf79ba5-085e-48d2-9eb8-2d992fbf0f6d: Annoy 0.357190847397, Postgres 1.07148599625, Number of Intersections 41       
+8d5f76cf-0fa1-45a1-8464-68053d03b46b: Annoy 0.031790971756, Postgres 0.303033828735, Number of Intersections 3       
+c718f7c1-b63b-4638-bda3-42ca56177dd7: Annoy 0.0329849720001, Postgres 0.263137102127, Number of Intersections 25     
+47974dfd-f37d-4f41-b952-18a86af009d2: Annoy 0.0334539413452, Postgres 0.259241104126, Number of Intersections 20     
+0cdc9b5b-b16b-4ff1-9f16-5b4ba76f1c17: Annoy 0.0180668830872, Postgres 0.292777776718, Number of Intersections 0      
+b7ffa922-7bb8-4703-aa51-3bcc6d9cc364: Annoy 0.0104310512543, Postgres 2.44358301163, Number of Intersections 31      
+---------------------------                                                                                          
+METRIC: key                                                                                                          
+ebf79ba5-085e-48d2-9eb8-2d992fbf0f6d: Annoy 0.166845083237, Postgres 0.549662828445, Number of Intersections 53      
+8d5f76cf-0fa1-45a1-8464-68053d03b46b: Annoy 0.082505941391, Postgres 0.409280061722, Number of Intersections 9       
+c718f7c1-b63b-4638-bda3-42ca56177dd7: Annoy 0.00902104377747, Postgres 0.0158879756927, Number of Intersections 53   
+47974dfd-f37d-4f41-b952-18a86af009d2: Annoy 0.0116789340973, Postgres 0.35836482048, Number of Intersections 1       
+0cdc9b5b-b16b-4ff1-9f16-5b4ba76f1c17: Annoy 0.0266170501709, Postgres 0.277122020721, Number of Intersections 0      
+b7ffa922-7bb8-4703-aa51-3bcc6d9cc364: Annoy 0.0347170829773, Postgres 0.335122108459, Number of Intersections 15     
+---------------------------                                                                                          
+METRIC: bpm                                                                                                          
+ebf79ba5-085e-48d2-9eb8-2d992fbf0f6d: Annoy 1.30086302757, Postgres 0.297303915024, Number of Intersections 219      
+8d5f76cf-0fa1-45a1-8464-68053d03b46b: Annoy 0.269973993301, Postgres 0.282022953033, Number of Intersections 983     
+c718f7c1-b63b-4638-bda3-42ca56177dd7: Annoy 0.285392045975, Postgres 0.343688011169, Number of Intersections 0       
+47974dfd-f37d-4f41-b952-18a86af009d2: Annoy 0.0284030437469, Postgres 0.30425620079, Number of Intersections 0       
+0cdc9b5b-b16b-4ff1-9f16-5b4ba76f1c17: Annoy 0.0209209918976, Postgres 0.278332948685, Number of Intersections 0      
+b7ffa922-7bb8-4703-aa51-3bcc6d9cc364: Annoy 0.487100839615, Postgres 0.269095897675, Number of Intersections 0       
+---------------------------                                                                                          
+METRIC: onsetrate                                                                                                    
+ebf79ba5-085e-48d2-9eb8-2d992fbf0f6d: Annoy 0.25171995163, Postgres 0.377151966095, Number of Intersections 0        
+8d5f76cf-0fa1-45a1-8464-68053d03b46b: Annoy 0.128665924072, Postgres 0.255650997162, Number of Intersections 998     
+c718f7c1-b63b-4638-bda3-42ca56177dd7: Annoy 0.0314848423004, Postgres 0.280055046082, Number of Intersections 0      
+47974dfd-f37d-4f41-b952-18a86af009d2: Annoy 0.0844299793243, Postgres 0.254150152206, Number of Intersections 640    
+0cdc9b5b-b16b-4ff1-9f16-5b4ba76f1c17: Annoy 0.0563540458679, Postgres 0.322402954102, Number of Intersections 0      
+b7ffa922-7bb8-4703-aa51-3bcc6d9cc364: Annoy 0.0342469215393, Postgres 0.309617996216, Number of Intersections 0        

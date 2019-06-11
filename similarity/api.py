@@ -1,6 +1,7 @@
 import db
 from operations import HybridMetric
 import numpy as np
+from collections import defaultdict
 
 NORMALIZATION_SAMPLE_SIZE = 10000
 PROCESS_BATCH_SIZE = 10000
@@ -28,10 +29,7 @@ def get_all_metrics():
 def get_all_indices(n_trees=10):
     distance_measures = [
         "angular",
-        "euclidean",
-        "manhattan",
-        "hamming",
-        "dot"]
+        "manhattan"]
     metrics = ["mfccs",
         "mfccsw",
         "gfccs",
@@ -47,7 +45,7 @@ def get_all_indices(n_trees=10):
     indices = defaultdict(list)
     for distance in distance_measures:
         for metric in metrics: 
-            indices[distance].append((metric, n_trees) 
+            indices[distance].append((metric, n_trees))
     return indices
 
 

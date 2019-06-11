@@ -7,7 +7,7 @@ import click
 import webserver
 import db
 
-from api import get_all_metrics, get_similar_recordings
+from api import get_all_metrics, get_all_indices, get_similar_recordings
 from index_model import AnnoyModel
 from sqlalchemy import text
 from collections import defaultdict
@@ -84,23 +84,30 @@ def probe_all():
     metrics_dict = get_all_metrics()
     # Compute similarity for postgres
     click.echo("Pre-computing similarity with Postgres...")
-    postgres_similarity = defaultdict(defaultdict(dict))
+    postgres_similarity = defaultdict(lambda: defaultdict(dict))
     for category, metric_list in metrics_dict.items():
         for metric, _ in metric_list:
             with db.engine.connect() as connection:
                 for mbid in mbids:
                     # Time Postgres
+                    print("querying postgres...")
                     start = time.time()
                     postgres_recordings, category, description = get_similar_recordings(mbid, metric)
                     end = time.time()
                     postgres_time = end - start
-                    postgres_similarity[metric][mbid]["recordings"] = postgres_recordings
+                    print(postgres_time)
+                    print("postgres_recordings:")
+                    print(postgres_recordings)
+                    print("==================================")
+                    postgres_similarity[metric][mbid]["recordings"] = ["postgres_recordings"]
                     postgres_similarity[metric][mbid]["time"] = postgres_time
 
     index_dict = get_all_indices()
-    # Compute similarity for annoy
+    # Compute similarity for annoy'
+    click.echo("Computing similarity for Annoy...")
     for distance_type in index_dict:
-        for metric, n_trees in distance_type:
+        print("{}".format(distance_type))
+        for metric, n_trees in index_dict[distance_type]:
             print("---------------------------")
             print("METRIC: {}".format(metric))
             with db.engine.connect() as connection:
