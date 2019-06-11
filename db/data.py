@@ -521,7 +521,7 @@ def load_many_high_level(recordings):
 
 
 def load_many_select_features(recordings, features, aliases):
-    """Load select features for multiple recordings.
+    """Load select lowlevel features for multiple recordings.
     
     Args:
         recordings: A list of tuples (mbid, offset).
