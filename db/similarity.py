@@ -500,3 +500,20 @@ def check_for_eval_submission(user_id, eval_id):
         if not result.rowcount:
             return False
         return True
+
+
+def bulk_get_vectors_and_models(sample_size):
+    """Get data batch for similarity models"""
+    with db.engine.connect() as connection:
+        query = text("""
+            WITH hlm AS (
+          SELECT data->'value' AS value
+            FROM highlevel_model AS hlm
+        GROUP BY highlevel
+           LIMIT :sample_size)
+          SELECT s.*
+               , hlm.highlevel, hlm.value
+            FROM similarity.similarity AS s
+           WHERE highlevel = similarityhighlevel
+              IN ()
+        """)

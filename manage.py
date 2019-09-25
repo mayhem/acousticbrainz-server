@@ -20,6 +20,7 @@ import db.submission_stats
 import db.user
 import webserver
 import similarity.manage
+import similarity.dump_manage
 import similarity.script
 
 
@@ -292,6 +293,7 @@ def remove_failed_rows():
 cli.add_command(db.dump_manage.cli, name="dump")
 cli.add_command(similarity.manage.cli, name="similarity")
 cli.add_command(similarity.script.cli, name="similarity-script")
+cli.add_command(similarity.dump_manage.cli, name="similarity-dump")
 
 if __name__ == '__main__':
     cli()
